@@ -1,2 +1,1 @@
-# DLL_with_Delphi
-Example of DLL in Delphi
+# Communication of DLLs (C, Delphi) with main program in Delphi
