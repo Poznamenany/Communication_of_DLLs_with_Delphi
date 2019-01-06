@@ -5,6 +5,8 @@
 #ifndef DLL_Library_H
 #define DLL_Library_H
 
+#define ADDCALL __stdcall
+
 // Events interface (it is called from Delphi to Delphi)
 // 8E77167C-CC59-4917-BE0B-BCF311B3CEEE
 static const GUID IID_IEvents =
@@ -13,7 +15,7 @@ static const GUID IID_IEvents =
 interface IEvents: IUnknown
 {
 public:
-	virtual void __stdcall Event1(ui32 aID) = 0; 
+	virtual void ADDCALL Event1(ui32 aID) = 0; 
 };
 typedef IEvents * pIEvents;
 
@@ -26,7 +28,7 @@ static const GUID IID_IActions =
 interface IActions: IUnknown
 {
 public:
-    virtual void __stdcall Action1(ui32 aID, ui32 aCmd) = 0;
+    virtual void ADDCALL Action1(ui32 aID, ui32 aCmd) = 0;
 };
 typedef IActions * pIActions;
 
@@ -39,7 +41,7 @@ static const GUID IID_IStates =
 interface IStates: IUnknown
 {
 public:
-    virtual void __stdcall State1(ui32 aID, ui32 aCmd) = 0;
+    virtual void ADDCALL State1(ui32 aID, ui32 aCmd) = 0;
 };
 typedef IStates * pIStates;
 
@@ -48,22 +50,16 @@ typedef IStates * pIStates;
 extern "C" {
 #endif
 
-#ifdef BUILDING_DLL_Library
-#define FCN_TYPE __declspec(dllexport)
-#else
-#define FCN_TYPE __declspec(dllexport)
-#endif
-
 // Communication interface
-FCN_TYPE void __stdcall InitDLL(void);
-FCN_TYPE void __stdcall TerminDLL(void);
-FCN_TYPE void __stdcall InitNewExtAI(ui8 aID, pIActions aActions);
-
-FCN_TYPE HRESULT __stdcall NewExtAI(pIEvents *aEvents);
+void ADDCALL InitDLL(void);
+void ADDCALL TerminDLL(void);
+void ADDCALL InitNewExtAI(ui8 aID, pIActions aActions);
+HRESULT ADDCALL NewExtAI(pIEvents *aEvents);
 
 // Callback for communication interface
-typedef b (*pCallback1) (ui8);
-void FCN_TYPE RegisterCallback1(pCallback1 aCallback1);
+typedef b (ADDCALL *pCallback1) (ui8) ADDCALL;
+void ADDCALL RegisterCallback1(pCallback1 aCallback1);
+
 #ifdef __cplusplus
 }
 #endif

@@ -12,11 +12,11 @@ class TExtAI: public IEvents
 		TExtAI(void);
 		~TExtAI(void);
 		// IEvents
-		void __stdcall Event1(ui32 aID);
+		void ADDCALL Event1(ui32 aID);
 		// IUnknown
-		ULONG __stdcall AddRef(void);
-		ULONG __stdcall Release(void);
-		HRESULT __stdcall QueryInterface(REFIID riid,void **ppv);
+		ULONG ADDCALL AddRef(void);
+		ULONG ADDCALL Release(void);
+		HRESULT ADDCALL QueryInterface(REFIID riid,void **ppv);
 };
 
 typedef TExtAI * pTExtAI;

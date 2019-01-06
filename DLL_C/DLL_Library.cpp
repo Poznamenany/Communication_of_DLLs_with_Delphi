@@ -11,7 +11,7 @@ pTExtAI ExtAI [MAX_EXT_AI_CNT]; // pointers to possible ExtAI
 pCallback1 Callback1;// Callback from communication interface in C to Delphi
 
 // Events
-void __stdcall InitDLL(void)
+void ADDCALL InitDLL(void)
 {
 	printf("DLL InitDLL - C\n");
 	ExtAICnt = 0;
@@ -21,7 +21,7 @@ void __stdcall InitDLL(void)
 	}
 }
 
-void TerminDLL(void) 
+void ADDCALL TerminDLL(void) 
 {
 	printf("DLL TerminDLL - C\n");
 	for (ui8 K = 0; K < MAX_EXT_AI_CNT; K++)
@@ -34,7 +34,7 @@ void TerminDLL(void)
 }
 
 
-HRESULT NewExtAI(pIEvents *aEvents)
+HRESULT ADDCALL NewExtAI(pIEvents *aEvents)
 {
 	printf("DLL NewExtAI - C\n");
 	ExtAI[ExtAICnt] = new TExtAI();
@@ -52,7 +52,7 @@ HRESULT NewExtAI(pIEvents *aEvents)
 }
 
 
-void InitNewExtAI(ui8 aID, pIActions aActions)
+void ADDCALL InitNewExtAI(ui8 aID, pIActions aActions)
 {
 	printf("DLL InitNewExtAI - C\n");
 	ExtAI[ExtAICnt-1]->ID = aID;
@@ -61,12 +61,11 @@ void InitNewExtAI(ui8 aID, pIActions aActions)
 
 
 // Register callback
-void FCN_TYPE RegisterCallback1(pCallback1 aCallback1);
-void RegisterCallback1(pCallback1 aCallback1)
+void ADDCALL RegisterCallback1(pCallback1 aCallback1)
 {
 	printf("DLL Callback1\n");
 	Callback1 = aCallback1;
-	b res = (*aCallback1)( ui8(212) ); // Test callback
+	b res = Callback1(212); // Test callback
 }
 
 
