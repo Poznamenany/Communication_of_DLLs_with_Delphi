@@ -1,1 +1,2 @@
-# Communication of DLLs (C, Delphi) with main program in Delphi
+# Delphi: communication with DLLs (C++, Delphi)
+This is an example of communication between main program (Delphi) and multiple DLLs (C++, Delphi). Initialization of the DLL works with shared functions (with possibility to use callbacks in DLL to call functions in the main program). After the initialization there are created pairs of ExtAIAPI (Main program) and ExtAI (DLL) classes which are derived from COM interface and interact between each other without using shared functions => 1 physical DLL file can be used for multiple classes / threads / instances at once.
