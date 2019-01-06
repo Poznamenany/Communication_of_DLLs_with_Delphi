@@ -82,18 +82,12 @@ begin
     begin
       writeln('TCDLL: last error (should be 0): ' + IntToStr( GetLastError() ));
       Output := true;
-      { // C DLL
-      InitDLL := GetProcAddress(fLibHandle, 'InitDLL@0');
-      TerminDLL := GetProcAddress(fLibHandle, 'TerminDLL@0');
-      NewExtAI := GetProcAddress(fLibHandle, 'NewExtAI@4');
-      InitNewExtAI := GetProcAddress(fLibHandle, 'InitNewExtAI@8');
-      //}
-      //{ // Delphi DLL
+
       InitDLL := GetProcAddress(fLibHandle, 'InitDLL');
       TerminDLL := GetProcAddress(fLibHandle, 'TerminDLL');
       NewExtAI := GetProcAddress(fLibHandle, 'NewExtAI');
       InitNewExtAI := GetProcAddress(fLibHandle, 'InitNewExtAI');
-      //}
+
       //if  assigned(NewExtAI) then
       //  writeln('TCommDLL: NewExtAI');
 
