@@ -1,10 +1,9 @@
 unit CommonDataTypes;
-
 interface
 
 type
   b = boolean;     //                        0 to 1
-// Integer
+  // Integer
 	ui8 = Byte;      //                        0 to 255
 	si8 = ShortInt;  //                     -127 to 127
 	ui16 = Word;     //                        0 to 65,535
@@ -16,7 +15,7 @@ type
 	//ui64 = UInt64; //                          0 to 1,84467440737096E19 // Delphi does not have ui64 in basic set?
 	si64 = Int64;  // -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807
 
-// Float
+  // Float
 	f4 = Single;   //  7  significant digits, exponent   -38 to +38
 	f8 = Double;   // 15  significant digits, exponent  -308 to +308
 	//f10 = Extended; // 19  significant digits, exponent -4932 to +4932

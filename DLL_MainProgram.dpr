@@ -1,33 +1,38 @@
 program DLL_MainProgram;
-/// Example of communication between Delphi and C++ with using shared functions, callbacks and interface
+// Example of communication between Delphi and C++ with using shared functions, callbacks and interface
 {$APPTYPE CONSOLE}
 
 {$R *.res}
 
 uses
-  Windows, System.SysUtils, MainExtAI, CommonDataTypes;
+  Windows,
+  System.SysUtils,
+  CommDLL in 'CommDLL.pas',
+  CommonDataTypes in 'CommonDataTypes.pas',
+  ExtAIAPI in 'ExtAIAPI.pas',
+  InterfaceDelphi in 'InterfaceDelphi.pas',
+  ExtAIMaster in 'ExtAIMaster.pas';
 
 const
   // Relative path to DLL
-  str_DELPHI_DLL = '..\..\DLL_Delphi\Win32\Debug\DLL_Library.dll';
-  str_C_DLL = '..\..\DLL_C\DLL_library.dll';
+  str_DELPHI_DLL_PATH = '..\..\DLL_Delphi\Win32\Debug\DLL_Library.dll';
+  str_C_DLL_PATH = '..\..\DLL_C\DLL_library.dll';
 
 var
   ExtAIMaster: TExtAIMaster;
-  ActualDLL: String;
+  dllPath: string;
 begin
-
-  writeln('Start test');
-  //ActualDLL := str_DELPHI_DLL;
-  ActualDLL := str_C_DLL;
+  Writeln('Start test');
+  dllPath := str_DELPHI_DLL_PATH;
+  //dllPath := str_C_DLL_PATH;
 
   ExtAIMaster := TExtAIMaster.Create();
   try
-    ExtAIMaster.NewDLL(ActualDLL);
+    ExtAIMaster.NewDLL(dllPath);
 
-    ExtAIMaster.NewExtAI(ActualDLL, 1);
-    //ExtAIMaster.NewExtAI(ActualDLL, 2);
-    //ExtAIMaster.NewExtAI(ActualDLL, 3);
+    ExtAIMaster.NewExtAI(dllPath, 1);
+    //ExtAIMaster.NewExtAI(dllPath, 2);
+    //ExtAIMaster.NewExtAI(dllPath, 3);
 
     // Trigers, Start event, etc.
 
@@ -36,6 +41,6 @@ begin
     ExtAIMaster.Free();
   end;
 
-  writeln('Test is finished. Press Enter');
+  Writeln('Test is finished. Press Enter');
   ReadLn;
 end.

@@ -1,13 +1,12 @@
 unit ExtAIAPI;
-
 interface
 uses
   Windows, System.SysUtils, InterfaceDelphi, CommonDataTypes;
 
 
 type
-
-TExtAIAPI = class(TInterfacedObject, IActions)
+  // API for 1 specific ExtAI class in DLL. Allows ExtAI to communicate during the game.
+  TExtAIAPI = class(TInterfacedObject, IActions)
   private
     fID: ui8;
     // Actions

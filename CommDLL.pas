@@ -1,9 +1,10 @@
 unit CommDLL;
-
 interface
 uses
   Windows, System.SysUtils, ExtAIAPI, InterfaceDelphi, CommonDataTypes;
 
+const
+  MAX_HANDS = 12;
 
 type
   TInitDLL = procedure(); StdCall;
@@ -13,16 +14,18 @@ type
 
   TCallback1 = function(sig: ui8): b of object; StdCall;
 
-TCommDLL = class
+  // Communication with 1 physical DLL with using exported methods.
+  // Main targets: initialization of DLL, creation of ExtAIs and termination of DLL and ExtAIs
+  TCommDLL = class
   private
     fLibHandle: THandle;
     fDLLPath: String;
     fExtAIAPICnt: ui8;
-    fExtAIAPI: array[0..11] of TExtAIAPI;
-    InitDLL: TInitDLL;
-    TerminDLL: TTerminDLL;
-    InitNewExtAI: TInitNewExtAI;
-    NewExtAI: TNewExtAI;
+    fExtAIAPI: array [0..MAX_HANDS-1] of TExtAIAPI;
+    fOnInitDLL: TInitDLL;
+    fOnTerminDLL: TTerminDLL;
+    fOnInitNewExtAI: TInitNewExtAI;
+    fOnNewExtAI: TNewExtAI;
   public
     property DLLPath: String read fDLLPath;
     //property ExtAICnt: ui8 read fExtAIAPICnt;
@@ -34,7 +37,6 @@ TCommDLL = class
     function LinkDLL(aDLLPath: String): b;
     function CreateNewExtAI(aExtAIID: ui8): b;
     procedure UpdateState();
-
 
     function Callback1(sig: ui8): b; StdCall;
   end;
@@ -57,8 +59,8 @@ destructor TCommDLL.Destroy();
 var
   K: ui8;
 begin
-  if assigned(TerminDLL) then
-    TerminDLL();
+  if Assigned(fOnTerminDLL) then
+    fOnTerminDLL();
 
   FreeLibrary(fLibHandle);
   for K := Low(fExtAIAPI) to High(fExtAIAPI) do
@@ -67,67 +69,63 @@ begin
 end;
 
 
-function TCommDLL.LinkDLL(aDLLPath: String): boolean;
+function TCommDLL.LinkDLL(aDLLPath: String): b;
 var
-  Output: boolean;
   RegisterCallback1: procedure(x: TCallback1); StdCall;
 begin
-  Output := false;
+  Result := False;
   fDLLPath := aDLLPath;
   if fileexists(DLLPath) then
   begin
-    writeln('TCommDLL: DLL file detected');
+    Writeln('TCommDLL: DLL file detected');
     fLibHandle := SafeLoadLibrary( DLLPath );
     if (fLibHandle <> 0) then
     begin
-      writeln('TCDLL: last error (should be 0): ' + IntToStr( GetLastError() ));
-      Output := true;
+      Writeln('TCDLL: last error (should be 0): ' + IntToStr( GetLastError() ));
+      Result := True;
 
-      InitDLL := GetProcAddress(fLibHandle, 'InitDLL');
-      TerminDLL := GetProcAddress(fLibHandle, 'TerminDLL');
-      NewExtAI := GetProcAddress(fLibHandle, 'NewExtAI');
-      InitNewExtAI := GetProcAddress(fLibHandle, 'InitNewExtAI');
+      fOnInitDLL := GetProcAddress(fLibHandle, 'InitDLL');
+      fOnTerminDLL := GetProcAddress(fLibHandle, 'TerminDLL');
+      fOnNewExtAI := GetProcAddress(fLibHandle, 'NewExtAI');
+      fOnInitNewExtAI := GetProcAddress(fLibHandle, 'InitNewExtAI');
 
-      //if  assigned(NewExtAI) then
-      //  writeln('TCommDLL: NewExtAI');
+      //if  Assigned(NewExtAI) then
+      //  Writeln('TCommDLL: NewExtAI');
 
-      //if  assigned(InitNewExtAI) then
-      //  writeln('TCommDLL: InitNewExtAI');
+      //if  Assigned(InitNewExtAI) then
+      //  Writeln('TCommDLL: InitNewExtAI');
 
-      if assigned(InitDLL) AND
-         assigned(TerminDLL) AND
-         assigned(NewExtAI) AND
-         assigned(InitNewExtAI) then
+      if Assigned(fOnInitDLL)
+      AND Assigned(fOnTerminDLL)
+      AND Assigned(fOnNewExtAI)
+      AND Assigned(fOnInitNewExtAI) then
       begin
-        Output := True;
-        InitDLL();
-        writeln('TCommDLL: procedures of DLL assigned');
+        Result := True;
+        fOnInitDLL();
+        Writeln('TCommDLL: procedures of DLL assigned');
       end;
 
       RegisterCallback1 := GetProcAddress(fLibHandle, 'RegisterCallback1');
-      if assigned(RegisterCallback1) then
+      if Assigned(RegisterCallback1) then
         RegisterCallback1( Callback1 );
     end
     else
-      writeln('TCDLL: library was NOT loaded, error: ' + IntToStr( GetLastError() ));
+      Writeln('TCDLL: library was NOT loaded, error: ' + IntToStr( GetLastError() ));
   end
   else
-    writeln('TCommDLL: DLL file was NOT found');
-  Result := Output;
+    Writeln('TCommDLL: DLL file was NOT found');
 end;
 
 
 function TCommDLL.CreateNewExtAI(aExtAIID: ui8): b;
-var
-  Output: b;
 begin
-  Output := false;
-  if (assigned(NewExtAI)) then
+  Result := False;
+  if (Assigned(fOnNewExtAI)) then
   begin
     fExtAIAPI[fExtAIAPICnt] := TExtAIAPI.Create(aExtAIID);
     try
-      fExtAIAPI[fExtAIAPICnt].Events := NewExtAI();
-      InitNewExtAI( aExtAIID, fExtAIAPI[fExtAIAPICnt] );
+      fExtAIAPI[fExtAIAPICnt].Events := fOnNewExtAI();
+      fOnInitNewExtAI( aExtAIID, fExtAIAPI[fExtAIAPICnt] );
       Inc(fExtAIAPICnt);
     except
       on E: Exception do
@@ -136,10 +134,8 @@ begin
         Readln;
       end;
     end;
-
-    Output := True;
+    Result := True;
   end;
-  Result := Output;
 end;
 
 procedure TCommDLL.UpdateState();
@@ -154,10 +150,10 @@ begin
 end;
 
 
-function TCommDLL.Callback1(sig: ui8): b;
+function TCommDLL.Callback1(sig: ui8): b; StdCall;
 begin
-  writeln('TCommDLL: callback1, value: ' + IntToStr(sig));
-  Result := true;
+  Writeln('TCommDLL: callback1, value: ' + IntToStr(sig));
+  Result := True;
 end;
 
 
