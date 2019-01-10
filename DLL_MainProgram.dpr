@@ -9,58 +9,58 @@ uses
   System.SysUtils,
   CommDLL in 'CommDLL.pas',
   CommonDataTypes in 'CommonDataTypes.pas',
+  CheckDLL in 'CheckDLL.pas',
   ExtAIAPI in 'ExtAIAPI.pas',
-  InterfaceDelphi in 'InterfaceDelphi.pas',
-  ExtAIMaster in 'ExtAIMaster.pas';
-
-const
-  // Relative path to DLL
-  str_DELPHI_DLL_PATH = '..\..\DLL_Delphi\Win32\Debug\DLL_Library.dll';
-  str_C_DLL_PATH = '..\..\DLL_C\DLL_library.dll';
+  ExtAIMaster in 'ExtAIMaster.pas',
+  InterfaceDelphi in 'InterfaceDelphi.pas';
 
 var
   ExtAIMaster: TExtAIMaster;
-  dllPath: string;
-  I: Integer;
+  CheckDLL: TCheckDLL;
+
+  DLLPath: String;
+  K: Integer; //@Krom: just small 'nice to have' hint: indexes I and J are prohibited because they are similar and confusing (Matlab, Python and maybe lib. in C use complex numbers)
 begin
   Writeln('Start test');
-  dllPath := str_DELPHI_DLL_PATH;
-  //dllPath := str_C_DLL_PATH;
 
-  //@Martin: The code below closely resembles gGameApp code in KP/KMR. 
-  // Let's restructure it that way:
+// gGameApp init:
+  // DLL role: detect all valid DLLs with ExtAI
+  CheckDLL := TCheckDLL.Create();
 
-  // gGameApp init:
-  // (Try/Finally stripped out for readability)
-  // Inititalize ExtAI master and list what was found
-  ExtAIMaster := TExtAIMaster.Create();
-  ExtAIMaster.NewDLL(dllPath);
-  //todo: display a list of ExtAIs that ExtAIMaster has found
-  
-  // gGame start:
-  // New mission is being started. Configure and init ExtAIs
-  ExtAIMaster.NewExtAI(dllPath, 1);
-  //todo: extAI := ExtAIMaster.NewExtAI(dllPath, 1);
-  //ExtAIMaster.NewExtAI(dllPath, 2);
-  //ExtAIMaster.NewExtAI(dllPath, 3);
-  
-  // gGame.UpdateState flow:
-  // Each tick the game does its work. ExtAI should integrate with that
-  for I := 0 to 999 do
+  for K := 0 to CheckDLL.DLL.Count-1 do
   begin
-    //todo: issue event to extAI
-    //todo: Trigers, Start event, etc.
-    //todo: extAI.UpdateState ?
+    DLLPath := CheckDLL.DLL[K];
+    // Get DLLs config + name
+    // Display it in lobby
   end;
 
-  //gGame end:
+// gGame start (load phase):
+  ExtAIMaster := TExtAIMaster.Create(); //@Krom: maybe it is worth it to move this line to init phase
+  // Feedback from lobby -> return selected DLL / ExtAI in DLLPath (or name of ExtAI etc.)
+  ExtAIMaster.NewDLL(DLLPath); // According to player selection
+
+// New mission is being started. Configure and init ExtAIs
+  ExtAIMaster.NewExtAI(DLLPath, 1);
+  //todo: extAI := ExtAIMaster.NewExtAI(dllPath, 1); //@Krom: what do you want to return? TExtAIAPI?
+
+// gGame.UpdateState flow:
+  // Each tick the game does its work. ExtAI should integrate with that
+  for K := 0 to 3 do
+  begin
+    //todo: issue event to extAI
+    //todo: Trigers, Start event, etc. //@Krom: calling of function UpdateState is equal to all events, only parameters will be changed
+  end;
+
+//gGame end:
   // Mission has ended, ExtAIs need to be freed
   //todo: extAI.Release
 
-  //gGameApp end:
+//gGameApp end:
   // App is terminated.
   ExtAIMaster.Free();
+  CheckDLL.Free();
 
   Writeln('Test is finished. Press Enter');
   ReadLn;
 end.
+

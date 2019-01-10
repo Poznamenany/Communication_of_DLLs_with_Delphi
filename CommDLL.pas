@@ -114,6 +114,7 @@ begin
   end
   else
     Writeln('TCommDLL: DLL file was NOT found');
+      Writeln('TCDLL: last error (should be 0): ' + IntToStr( GetLastError() ));
 end;
 
 

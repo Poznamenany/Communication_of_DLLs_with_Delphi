@@ -1,19 +1,17 @@
 unit ExtAIMaster;
 interface
 uses
-  Windows, System.SysUtils, CommDLL, CommonDataTypes;
+  Classes, Windows, System.SysUtils, CommDLL, CommonDataTypes;
 
 type
   // Manager class. It controls all initialized DLLs and eventually mediating the interface between game and ExtAI.
   TExtAIMaster = class
   private
-    fCommDLLCnt: ui8;
-    fCommDLL: array[0..MAX_HANDS-1] of TCommDLL;
+    fCommDLL: TList;
   public
     constructor Create();
     destructor Destroy(); override;
 
-    function NewDLL(aDLLPath: String): b;
     function NewExtAI(aDLLPath: String; aExtAIID: ui8): b;
     procedure UpdateState();
 end;
@@ -23,50 +21,50 @@ implementation
 
 { TExtAIMaster }
 constructor TExtAIMaster.Create();
-var
-  K: ui8;
 begin
   inherited;
-  fCommDLLCnt := 0;
-  for K := Low(fCommDLL) to High(fCommDLL) do
-    fCommDLL[K] := nil;
+  fCommDLL := TList.Create();
 end;
 
 destructor TExtAIMaster.Destroy();
-var
-  K: ui8;
 begin
-  for K := Low(fCommDLL) to High(fCommDLL) do
-    FreeAndNil(fCommDLL[K]);
+  fCommDLL.Free();
   inherited;
-end;
-
-function TExtAIMaster.NewDLL(aDLLPath: String): b;
-begin
-  fCommDLL[fCommDLLCnt] := TCommDLL.Create();
-  Inc(fCommDLLCnt);
-  Result := fCommDLL[fCommDLLCnt-1].LinkDLL(aDLLPath);
 end;
 
 
 function TExtAIMaster.NewExtAI(aDLLPath: String; aExtAIID: ui8): b;
 var
-  K: ui8;
+  DLLExist: boolean;
+  K: Integer;
+  DLL: TCommDLL;
 begin
   Result := False;
-  for K := Low(fCommDLL) to High(fCommDLL) do
-    if (fCommDLL[K] <> nil) AND ( ansicomparestr(fCommDLL[K].DLLPath,aDLLPath) = 0 ) then
-      Result := fCommDLL[K].CreateNewExtAI( aExtAIID );
+  DLL := nil;
+  for K := 0 to (fCommDLL.Count-1) do
+    if (fCommDLL[K] <> nil) AND (  ansicomparestr( TCommDLL(fCommDLL[K]).DLLPath, aDLLPath ) = 0  ) then
+    begin
+      DLL := TCommDLL(fCommDLL[K]);
+      break;
+    end;
+  if (DLL = nil) then
+  begin
+    DLL := TCommDLL.Create();
+    DLL.LinkDLL(aDLLPath);
+
+    fCommDLL.Add( DLL );
+  end;
+  Result := DLL.CreateNewExtAI( aExtAIID );
 end;
 
 
 procedure TExtAIMaster.UpdateState();
 var
-  K: ui8;
+  K: Integer;
 begin
-  for K := Low(fCommDLL) to High(fCommDLL) do
+  for K := 0 to fCommDLL.Count-1 do
     if (fCommDLL[K] <> nil) then
-      fCommDLL[K].UpdateState();
+      TCommDLL(fCommDLL[K]).UpdateState();
 end;
 
 
