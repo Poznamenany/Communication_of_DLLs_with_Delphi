@@ -20,8 +20,8 @@ type
   private
     fLibHandle: THandle;
     fDLLPath: String;
-    fExtAIAPICnt: ui8;
-    fExtAIAPI: array [0..MAX_HANDS-1] of TExtAIAPI;
+    fExtAIAPICnt: ui8; //@Martin: Use Delphi datatypes in Delphi please. Integer here
+    fExtAIAPI: array [0..MAX_HANDS-1] of TExtAIAPI; //@Martin: Better change to dynamic array or TList<> to avoid MAX_HANDS const (it is not needed here)
     fOnInitDLL: TInitDLL;
     fOnTerminDLL: TTerminDLL;
     fOnInitNewExtAI: TInitNewExtAI;
@@ -35,8 +35,8 @@ type
     destructor Destroy(); override;
 
     function LinkDLL(aDLLPath: String): b;
-    function CreateNewExtAI(aExtAIID: ui8): b;
-    procedure UpdateState();
+    function CreateNewExtAI(aExtAIID: ui8): b; //@Martin: This should return something (through TKMExtAIMaster maybe?). Something that TKMExtAI will be able to use directly
+    procedure UpdateState(); //@Martin: This is not needed?
 
     function Callback1(sig: ui8): b; StdCall;
   end;
@@ -78,10 +78,10 @@ begin
   if fileexists(DLLPath) then
   begin
     Writeln('TCommDLL: DLL file detected');
-    fLibHandle := SafeLoadLibrary( DLLPath );
+    fLibHandle := SafeLoadLibrary(DLLPath);
     if (fLibHandle <> 0) then
     begin
-      Writeln('TCDLL: last error (should be 0): ' + IntToStr( GetLastError() ));
+      Writeln('TCDLL: last error (should be 0): ' + IntToStr(GetLastError()));
       Result := True;
 
       fOnInitDLL := GetProcAddress(fLibHandle, 'InitDLL');
@@ -107,10 +107,10 @@ begin
 
       RegisterCallback1 := GetProcAddress(fLibHandle, 'RegisterCallback1');
       if Assigned(RegisterCallback1) then
-        RegisterCallback1( Callback1 );
+        RegisterCallback1(Callback1);
     end
     else
-      Writeln('TCDLL: library was NOT loaded, error: ' + IntToStr( GetLastError() ));
+      Writeln('TCDLL: library was NOT loaded, error: ' + IntToStr(GetLastError()));
   end
   else
     Writeln('TCommDLL: DLL file was NOT found');
@@ -120,8 +120,8 @@ end;
 function TCommDLL.CreateNewExtAI(aExtAIID: ui8): b;
 begin
   Result := False;
-  if (Assigned(fOnNewExtAI)) then
-  begin
+  if not Assigned(fOnNewExtAI) then Exit;
+  
     fExtAIAPI[fExtAIAPICnt] := TExtAIAPI.Create(aExtAIID);
     try
       fExtAIAPI[fExtAIAPICnt].Events := fOnNewExtAI();
@@ -135,7 +135,6 @@ begin
       end;
     end;
     Result := True;
-  end;
 end;
 
 procedure TCommDLL.UpdateState();
