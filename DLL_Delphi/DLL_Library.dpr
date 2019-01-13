@@ -1,5 +1,7 @@
 library DLL_Library;
+
 {$DEFINE DLL_Library}
+
 uses
   SysUtils, Classes, ExtAI, InterfaceDelphi, CommonDataTypes;
 
@@ -9,21 +11,13 @@ type
   TCallback1 = function(sig: ui8): b of object; StdCall;
 
 var
-  ExtAICnt: ui8;
-  ExtAI: array[0..11] of TExtAI;//@Martin: Replace with dynamic-sized structure please
+  gExtAI: TList;
   Callback1: TCallback1;
 
-
 procedure InitDLL(); StdCall;
-var
-  K: ui8;
 begin
   writeln('  DLL: InitDLL - Delphi');
-  ExtAICnt := 0;
-  for K := Low(ExtAI) to High(ExtAI) do
-  begin
-    ExtAI[K] := nil;
-  end;
+  gExtAI := TList.Create();
 end;
 
 procedure TerminDLL(); StdCall;
@@ -31,29 +25,30 @@ var
   K: ui8;
 begin
   writeln('  DLL: TerminDLL - Delphi');
-  for K := Low(ExtAI) to High(ExtAI) do
-    if (ExtAI[K] <> nil) then
+  for K := 0 to gExtAI.Count-1 do
+    if (gExtAI[K] <> nil) then
     begin
-      ExtAI[K].Actions := nil; // = decrement Interface Actions
-      ExtAI[K] := nil; // = decrement Interface Events
+      TExtAI(gExtAI[K]).Actions := nil; // = decrement Interface Actions
+      gExtAI[K] := nil; // = decrement Interface Events
     end;
+  gExtAI.Free();
 end;
 
 function NewExtAI(): IEvents; SafeCall;
+var
+  ExtAI: TExtAI;
 begin
   writeln('  DLL: NewExtAI - Delphi');
-  ExtAI[ExtAICnt] := TExtAI.Create(); // = increment Interface Events
-  Inc(ExtAICnt);
-  Result := ExtAI[ExtAICnt-1]; // Return pointer to this class (ExtAI is derived from event interface)
+  ExtAI := TExtAI.Create(); // = increment Interface Events
+  gExtAI.Add(ExtAI);
+  Result := ExtAI; // Return pointer to this class (ExtAI is derived from event interface)
 end;
 
 procedure InitNewExtAI(aID: ui8; aActions: IActions); StdCall;
-var
-  tst: si32;
 begin
   writeln('  DLL: InitNewExtAI - Delphi');
-  ExtAI[ExtAICnt-1].ID := aID;
-  ExtAI[ExtAICnt-1].Actions := aActions; // = increment Interface Actions
+  TExtAI(gExtAI[gExtAI.Count-1]).ID := aID;
+  TExtAI(gExtAI[gExtAI.Count-1]).Actions := aActions; // = increment Interface Actions
 end;
 
 
