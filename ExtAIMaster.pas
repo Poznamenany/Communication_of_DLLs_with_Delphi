@@ -1,19 +1,21 @@
 unit ExtAIMaster;
 interface
 uses
-  Classes, Windows, System.SysUtils, CheckDLL, CommDLL, CommonDataTypes;
+  Classes, Windows, System.SysUtils, ExtAIListDLL, CommDLL, CommonDataTypes;
 
 type
   // Manager class. It controls all initialized DLLs and eventually mediating the interface between game and ExtAI.
   TExtAIMaster = class
   private
     fCommDLL: TList;
-    fCheckDLL: TCheckDLL;
+    fCheckDLL: TExtAIListDLL;
 
     function IndexOf(aDLLPath: String): Integer;
   public
-    property ListOfDLL: TCheckDLL read fCheckDLL; // @Martin: Naming is misleading. It implies TCheckDLL is a list. Let's rename it to AvailableDLLs
-//Note for the future, the game doesn't care about DLLs. It needs a list of ExtAIs it can use
+    property AvailableDLLs: TExtAIListDLL read fCheckDLL;
+    //Note for the future, the game doesn't care about DLLs. It needs a list of ExtAIs it can use
+    //@Krom: 1 DLL = 1 ExtAI
+    //TODO: Create DLL config structure (with name of ExtAI) and send it to the game instead of DLLs path
 
     constructor Create();
     destructor Destroy(); override;
@@ -31,7 +33,7 @@ constructor TExtAIMaster.Create();
 begin
   inherited;
   fCommDLL := TList.Create();
-  fCheckDLL := TCheckDLL.Create();
+  fCheckDLL := TExtAIListDLL.Create();
 end;
 
 destructor TExtAIMaster.Destroy();

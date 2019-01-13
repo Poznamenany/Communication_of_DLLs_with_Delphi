@@ -103,7 +103,7 @@
         </DelphiCompile>
         <DCCReference Include="CommDLL.pas"/>
         <DCCReference Include="CommonDataTypes.pas"/>
-        <DCCReference Include="CheckDLL.pas"/>
+        <DCCReference Include="ExtAIListDLL.pas"/>
         <DCCReference Include="ExtAIAPI.pas"/>
         <DCCReference Include="ExtAIMaster.pas"/>
         <DCCReference Include="InterfaceDelphi.pas"/>
