@@ -23,11 +23,8 @@ type
     fOnInitNewExtAI: TInitNewExtAI;
     fOnNewExtAI: TNewExtAI;
   public
-
-  AAA: TExtAIAPI;
     property DLLPath: String read fDLLPath;
-    //property ExtAICnt: ui8 read fExtAIAPICnt;
-    //property ExtAI: TExtAI read fExtAI
+    //property ExtAIAPI: TList read fExtAIAPI;
 
     constructor Create();
     destructor Destroy(); override;
@@ -142,6 +139,7 @@ begin
     if (fExtAIAPI[K] <> nil) then
     begin
       TExtAIAPI( fExtAIAPI[K] ).UpdateState();
+      //...
     end;
 end;
 

@@ -4,18 +4,13 @@ uses
   IOUtils, Classes, System.SysUtils, CommonDataTypes;
 
 const
-  //@Krom: maybe set condition that folder with ExtAI must have the same name like DLL file?
-  // In the game there will be 1 folder for ExtAI and in this folder will be subfolders with individual DLLs
-  // For now keep multiple folders so I can use multiple projects in different IDE
-  //@Martin: Sounds good. Let's assume there is:
-  // game folder
+  // Expected folder structure:
   // - ext_ai
   //   - dll_delphi
   //     - dll_delphi.dll
   //   - dll_c
   //     - dll_c.dll
-  // It's TExtAIMaster task to scan the ext_ai folder and detect all DLLs
-
+  // For now keep multiple folders so I can use multiple projects in different IDE
   strArr_DLL_PATHS: array [0..1] of String = (
     '..\..\DLL_Delphi\Win32\Debug\',
     '..\..\DLL_C\'
@@ -26,13 +21,14 @@ type
   TCheckDLL = class
   private
     fDLLs: TStringList;
-    fLibHandle: THandle;
-    procedure GetDLLs();
   public
+    property DLL: TStringList read fDLLs;
+
     constructor Create();
     destructor Destroy(); override;
 
-    property DLL: TStringList read fDLLs;
+    procedure RefreshDLLs(aLogDLLs: Boolean = False);
+    function ContainDLL(const aDLLPath: String): boolean;
   end;
 
 implementation
@@ -42,7 +38,7 @@ implementation
 constructor TCheckDLL.Create();
 begin
   fDLLs := TStringList.Create();
-  GetDLLs();
+  RefreshDLLs(True); // Find available DLL (public method for possibility reload DLLs)
   inherited;
 end;
 
@@ -53,7 +49,7 @@ begin
 end;
 
 
-procedure TCheckDLL.GetDLLs();
+procedure TCheckDLL.RefreshDLLs(aLogDLLs: Boolean = False);
 var
   K: Integer;
   Path: String;
@@ -61,14 +57,24 @@ begin
   fDLLs.Clear();
   for K := Low(strArr_DLL_PATHS) to High(strArr_DLL_PATHS) do
     for Path in TDirectory.GetFiles( strArr_DLL_PATHS[K] ) do
-      if ExtractFileExt(Path) = '.dll' then
+      if (ExtractFileExt(Path) = '.dll') then
       begin
-        Writeln('  TCheckDLL: New DLL - ' + Path);
+        if aLogDLLs then
+          Writeln('  TCheckDLL: New DLL - ' + Path);
         // Check CRC
         // Try to initialize connection
         // Get version, configuration?, description
         fDLLs.Add(Path);
       end;
+  fDLLs.Sort(); // So Find will work
+end;
+
+
+function TCheckDLL.ContainDLL(const aDLLPath: String): boolean;
+var
+  Idx: Integer;
+begin
+  Result := fDLLs.Find(aDLLPath,Idx);
 end;
 
 end.
