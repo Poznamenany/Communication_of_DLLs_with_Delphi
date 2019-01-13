@@ -12,7 +12,8 @@ type
 
     function IndexOf(aDLLPath: String): Integer;
   public
-    property ListOfDLL: TCheckDLL read fCheckDLL;
+    property ListOfDLL: TCheckDLL read fCheckDLL; // @Martin: Naming is misleading. It implies TCheckDLL is a list. Let's rename it to AvailableDLLs
+//Note for the future, the game doesn't care about DLLs. It needs a list of ExtAIs it can use
 
     constructor Create();
     destructor Destroy(); override;

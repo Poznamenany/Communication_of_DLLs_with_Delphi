@@ -27,8 +27,8 @@ begin
 // gGame start (load phase):
   Writeln('');
   Writeln('Choose ExtAI');
-  for K := 0 to ExtAIMaster.ListOfDLL.DLL.Count-1 do // Get list of all DLLs(ExtAI)
-    DLLPath := ExtAIMaster.ListOfDLL.DLL[K];
+  for K := 0 to ExtAIMaster.ListOfDLL.Count-1 do // Get list of all DLLs(ExtAI)
+    DLLPath := ExtAIMaster.ListOfDLL[K];
   // Feedback from lobby -> return selected DLL / ExtAI in DLLPath (or name of ExtAI etc.)
   Writeln('  '+DLLPath);
   // Changed: Game does not care about DLL interface, it only requires initialization of new ExtAI and it does not care if this ExtAI is in the same DLL like previous

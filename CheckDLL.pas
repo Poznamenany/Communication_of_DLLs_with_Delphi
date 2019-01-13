@@ -18,11 +18,18 @@ const
 
 type
   // Check presence of all valid DLLs (in future it can also check CRC, save info etc.)
+  //@Martin: Let's rename it to match its role - to TExtDLLList, (same for unit name - ExtDLLList.pas)
+  // (I know, LLL looks bad to read, but at least it reflects the meaning of the class. Suggest your alternative?)
   TCheckDLL = class
   private
     fDLLs: TStringList;
+    function GetDll(aIndex: Integer): string;
+    function GetCount: Integer;
   public
-    property DLL: TStringList read fDLLs;
+    //@Martin: Why do we wrap TStringList inside the TCheckDLL? To keep the public interface as simple AS POSSIBLE.
+    // We could have done it TCheckDLL = class(TStringList), but then users of this class would have access to other public methods we would not want them to use
+    property Count: Integer read GetCount; //@Martin: Access is much neater this way
+    property DLL[aIndex: Integer]: string read GetDll; default; //@Martin: Access is much neater this way
 
     constructor Create();
     destructor Destroy(); override;
@@ -34,7 +41,7 @@ type
 implementation
 
 
-{ TCommDLL }
+{ TCheckDLL }
 constructor TCheckDLL.Create();
 begin
   fDLLs := TStringList.Create();
@@ -42,10 +49,23 @@ begin
   inherited;
 end;
 
+
 destructor TCheckDLL.Destroy();
 begin
   fDLLs.Free();
   inherited;
+end;
+
+
+function TCheckDLL.GetCount: Integer;
+begin
+  Result := fDLLs.Count;
+end;
+
+
+function TCheckDLL.GetDll(aIndex: Integer): string;
+begin
+  Result := fDLLs[aIndex];
 end;
 
 
@@ -66,15 +86,15 @@ begin
         // Get version, configuration?, description
         fDLLs.Add(Path);
       end;
-  fDLLs.Sort(); // So Find will work
+  //@Martin: Not needed. We need to keep our side of the code simple. Let the stringlist do it's part of the job
+  //fDLLs.Sort(); // So Find will work
 end;
 
 
 function TCheckDLL.ContainDLL(const aDLLPath: String): boolean;
-var
-  Idx: Integer;
 begin
-  Result := fDLLs.Find(aDLLPath,Idx);
+  //@Martin: Use simpler check to see if item is in the list
+  Result := fDLLs.IndexOf(aDLLPath) <> -1;
 end;
 
 end.
