@@ -7,6 +7,15 @@ const
   //@Krom: maybe set condition that folder with ExtAI must have the same name like DLL file?
   // In the game there will be 1 folder for ExtAI and in this folder will be subfolders with individual DLLs
   // For now keep multiple folders so I can use multiple projects in different IDE
+  //@Martin: Sounds good. Let's assume there is:
+  // game folder
+  // - ext_ai
+  //   - dll_delphi
+  //     - dll_delphi.dll
+  //   - dll_c
+  //     - dll_c.dll
+  // It's TExtAIMaster task to scan the ext_ai folder and detect all DLLs
+
   strArr_DLL_PATHS: array [0..1] of String = (
     '..\..\DLL_Delphi\Win32\Debug\',
     '..\..\DLL_C\'

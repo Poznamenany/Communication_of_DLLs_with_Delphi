@@ -30,7 +30,7 @@ destructor TExtAIMaster.Destroy();
 var
   K: Integer;
 begin
-  for K := 0 to (fCommDLL.Count-1) do
+  for K := 0 to fCommDLL.Count-1 do
     TCommDLL(fCommDLL[K]).Free();
   fCommDLL.Free();
   inherited;
@@ -39,24 +39,31 @@ end;
 
 function TExtAIMaster.NewExtAI(aDLLPath: String; aExtAIID: ui8): b;
 var
-  DLLExist: boolean;
   K: Integer;
   DLL: TCommDLL;
 begin
   Result := False;
   DLL := nil;
+
+  // Check if we already have this DLL loaded
+  //@Martin: Could be split into "IndexOf(aDLLPath: String): Integer" func
   for K := 0 to (fCommDLL.Count-1) do
-    if (fCommDLL[K] <> nil) AND (  ansicomparestr( TCommDLL(fCommDLL[K]).DLLPath, aDLLPath ) = 0  ) then
+    if (fCommDLL[K] <> nil) AND (  AnsiCompareStr( TCommDLL(fCommDLL[K]).DLLPath, aDLLPath ) = 0  ) then
     begin
       DLL := TCommDLL(fCommDLL[K]);
       break;
     end;
+
+  // if not, create the DLL
   if (DLL = nil) then
   begin
     DLL := TCommDLL.Create();
     DLL.LinkDLL(aDLLPath);
     fCommDLL.Add( DLL );
   end;
+
+  // Create ExtAI in DLL
+  //@Martin: What is the "aExtAIID" used for?
   Result := DLL.CreateNewExtAI( aExtAIID );
 end;
 
