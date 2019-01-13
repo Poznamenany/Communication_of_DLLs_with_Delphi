@@ -54,7 +54,7 @@ begin
     for Path in TDirectory.GetFiles( strArr_DLL_PATHS[K] ) do
       if (Length(Path) > 4) AND (Path.SubString(Length(Path)-4, 4) = '.dll') then // Make sure that the last 4 characters are .dll (and not name.ddl.exe)
       begin
-        //Writeln(Path);
+        Writeln('  TCheckDLL: New DLL - ' + Path);
         // Check CRC
         // Try to initialize connection
         // Get version, configuration?, description

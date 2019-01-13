@@ -27,7 +27,11 @@ begin
 end;
 
 destructor TExtAIMaster.Destroy();
+var
+  K: Integer;
 begin
+  for K := 0 to (fCommDLL.Count-1) do
+    TCommDLL(fCommDLL[K]).Free();
   fCommDLL.Free();
   inherited;
 end;
@@ -51,7 +55,6 @@ begin
   begin
     DLL := TCommDLL.Create();
     DLL.LinkDLL(aDLLPath);
-
     fCommDLL.Add( DLL );
   end;
   Result := DLL.CreateNewExtAI( aExtAIID );

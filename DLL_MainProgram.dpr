@@ -25,6 +25,8 @@ begin
 
 // gGameApp init:
   // DLL role: detect all valid DLLs with ExtAI
+  Writeln('');
+  Writeln('Find DLL files');
   CheckDLL := TCheckDLL.Create();
 
   for K := 0 to CheckDLL.DLL.Count-1 do
@@ -35,20 +37,23 @@ begin
   end;
 
 // gGame start (load phase):
+  Writeln('');
+  Writeln('Create communication interface');
   ExtAIMaster := TExtAIMaster.Create(); //@Krom: maybe it is worth it to move this line to init phase
   // Feedback from lobby -> return selected DLL / ExtAI in DLLPath (or name of ExtAI etc.)
-  ExtAIMaster.NewDLL(DLLPath); // According to player selection
-
-// New mission is being started. Configure and init ExtAIs
+  // Changed: Game does not care about DLL interface, it only requires initialization of new ExtAI and it does not care if this ExtAI is in the same DLL like previous
   ExtAIMaster.NewExtAI(DLLPath, 1);
   //todo: extAI := ExtAIMaster.NewExtAI(dllPath, 1); //@Krom: what do you want to return? TExtAIAPI?
 
 // gGame.UpdateState flow:
+  Writeln('');
+  Writeln('Loop');
   // Each tick the game does its work. ExtAI should integrate with that
-  for K := 0 to 3 do
+  for K := 0 to 1 do
   begin
     //todo: issue event to extAI
     //todo: Trigers, Start event, etc. //@Krom: calling of function UpdateState is equal to all events, only parameters will be changed
+    ExtAIMaster.UpdateState();
   end;
 
 //gGame end:
@@ -57,9 +62,12 @@ begin
 
 //gGameApp end:
   // App is terminated.
+  Writeln('');
+  Writeln('Terminate');
   ExtAIMaster.Free();
   CheckDLL.Free();
 
+  Writeln('');
   Writeln('Test is finished. Press Enter');
   ReadLn;
 end.
