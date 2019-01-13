@@ -20,6 +20,7 @@ var
 
   DLLPath: String;
   K: Integer; //@Krom: just small 'nice to have' hint: indexes I and J are prohibited because they are similar and confusing (Matlab, Python and maybe lib. in C use complex numbers)
+  //@Martin: Sorry, in Delphi world (and in C/JS/others I've seen), I-J-K are universal loop iterators. We code in Delphi, hence ...
 begin
   Writeln('Start test');
 
