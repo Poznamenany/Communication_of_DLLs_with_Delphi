@@ -49,6 +49,7 @@ begin
   // Changed: Game does not care about DLL interface, it only requires initialization of new ExtAI and it does not care if this ExtAI is in the same DLL like previous
   ExtAIMaster.NewExtAI(DLLPath, 1);
   //todo: extAI := ExtAIMaster.NewExtAI(dllPath, 1); //@Krom: what do you want to return? TExtAIAPI?
+  //@Martin: extAI should be something that goes into TKMAI implementation. I'm not sure yet, what TExtAIAPI class is and what it does
 
 // gGame.UpdateState flow:
   Writeln('');
