@@ -44,6 +44,7 @@ begin
   Writeln('');
   Writeln('Create communication interface');
   ExtAIMaster := TExtAIMaster.Create(); //@Krom: maybe it is worth it to move this line to init phase
+  //@Martin: Yes. It should be in init phase above
   // Feedback from lobby -> return selected DLL / ExtAI in DLLPath (or name of ExtAI etc.)
   // Changed: Game does not care about DLL interface, it only requires initialization of new ExtAI and it does not care if this ExtAI is in the same DLL like previous
   ExtAIMaster.NewExtAI(DLLPath, 1);
