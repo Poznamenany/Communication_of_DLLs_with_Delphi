@@ -26,15 +26,18 @@ begin
 
 // gGameApp init:
   // DLL role: detect all valid DLLs with ExtAI
-  Writeln('');
-  Writeln('Find DLL files');
-  CheckDLL := TCheckDLL.Create();
-
-  for K := 0 to CheckDLL.DLL.Count-1 do
+  // @Martin: This begin/end section should go into TExtAIMaster.Create
   begin
-    DLLPath := CheckDLL.DLL[K];
-    // Get DLLs config + name
-    // Display it in lobby
+    Writeln('');
+    Writeln('Find DLL files');
+    CheckDLL := TCheckDLL.Create();
+
+    for K := 0 to CheckDLL.DLL.Count-1 do
+    begin
+      DLLPath := CheckDLL.DLL[K];
+      // Get DLLs config + name
+      // Display it in lobby
+    end;
   end;
 
 // gGame start (load phase):
