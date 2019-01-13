@@ -61,7 +61,7 @@ begin
   fDLLs.Clear();
   for K := Low(strArr_DLL_PATHS) to High(strArr_DLL_PATHS) do
     for Path in TDirectory.GetFiles( strArr_DLL_PATHS[K] ) do
-      if (Length(Path) > 4) AND (Path.SubString(Length(Path)-4, 4) = '.dll') then // Make sure that the last 4 characters are .dll (and not name.ddl.exe)
+      if ExtractFileExt(Path) = '.dll' then
       begin
         Writeln('  TCheckDLL: New DLL - ' + Path);
         // Check CRC
