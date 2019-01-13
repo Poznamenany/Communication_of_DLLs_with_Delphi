@@ -26,32 +26,41 @@ TExtAI::TExtAI(void)
 {
 	ID = 0;
 	m_cRef = 0;
-	printf("ExtAI: Constructor\n");
+	Actions = NULL;
+	printf("    ExtAI: Constructor\n");
 }
 
 TExtAI::~TExtAI(void)
 {
-	printf("ExtAI: Destructor\n");
+	printf("    ExtAI: Destructor\n");
 }
+
 
 // Methods of IConsole wrapping Console
 void TExtAI::Event1(ui32 aID)
 {
-	printf("TExtAI: Event1, class ID: %d; parameter aID: %d\n",ID,aID);
+	printf("    TExtAI: Event1, class ID: %d; parameter aID: %d\n",ID,aID);
 	Actions->Action1(11, 22); // Check callback in Delphi
 }
+
 
 // Methods of IUnknown
 ULONG TExtAI::AddRef()
 {
-	return InterlockedIncrement(&m_cRef);
+	ULONG Cnt = InterlockedIncrement(&m_cRef);
+	//printf("      TExtAI: AddRef%d\n", Cnt);
+	return Cnt;
 }
 
 ULONG TExtAI::Release()
 {
 	ULONG result = InterlockedDecrement(&m_cRef);
+	//printf("      TExtAI: Release%d\n", result);
 	if (!result)
+	{
+		//printf("    TExtAI: Release\n");
 		delete this;
+	}
 	return result;
 }
 
