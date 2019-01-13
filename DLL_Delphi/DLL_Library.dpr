@@ -1,7 +1,5 @@
 library DLL_Library;
-
 {$DEFINE DLL_Library}
-
 uses
   SysUtils, Classes, ExtAI, InterfaceDelphi, CommonDataTypes;
 
@@ -12,7 +10,7 @@ type
 
 var
   ExtAICnt: ui8;
-  ExtAI: array[0..11] of TExtAI;
+  ExtAI: array[0..11] of TExtAI;//@Martin: Replace with dynamic-sized structure please
   Callback1: TCallback1;
 
 
