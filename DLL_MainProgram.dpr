@@ -42,10 +42,10 @@ begin
 
 // gGame.UpdateState flow:
   Writeln('');
-  Writeln('Loop');
   // Each tick the game does its work. ExtAI should integrate with that
-  for K := 0 to 1 do
+  for K := 1 to 2 do
   begin
+    Writeln('Loop: ' + IntToStr(K));
     //todo: issue event to extAI
     //todo: Trigers, Start event, etc.
     //@Krom: calling of function UpdateState is equal to all events, only parameters will be changed

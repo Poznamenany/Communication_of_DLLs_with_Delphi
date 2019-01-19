@@ -4,7 +4,7 @@ uses
   Classes, Windows, System.SysUtils, ExtAIAPI, InterfaceDelphi, CommonDataTypes;
 
 type
-  TInitDLL = procedure(); StdCall;
+  TInitDLL = procedure(var aConfig: TDLLpConfig); StdCall;
   TTerminDLL = procedure(); StdCall;
   TInitNewExtAI = procedure(aID: ui8; aActions: IActions; aStates: IStates) StdCall;
   TNewExtAI = function(): IEvents; SafeCall; // Same like StdCall but allows exceptions
@@ -15,6 +15,7 @@ type
   // Main targets: initialization of DLL, creation of ExtAIs and termination of DLL and ExtAIs
   TCommDLL = class
   private
+    fDLLConfig: TDLLConfig;
     fLibHandle: THandle;
     fDLLPath: String;
     fExtAIAPI: TList;
@@ -23,6 +24,7 @@ type
     fOnInitNewExtAI: TInitNewExtAI;
     fOnNewExtAI: TNewExtAI;
   public
+    property Config: TDLLConfig read fDLLConfig;
     property DLLPath: String read fDLLPath;
     //property ExtAIAPI: TList read fExtAIAPI;
 
@@ -65,7 +67,8 @@ end;
 
 
 function TCommDLL.LinkDLL(aDLLPath: String): b;
-//var
+var
+  Config: TDLLpConfig;
 //  RegisterCallback1: procedure(x: TCallback1); StdCall;
 begin
   Result := False;
@@ -90,8 +93,15 @@ begin
       AND Assigned(fOnInitNewExtAI) then
       begin
         Result := True;
-        fOnInitDLL();
-        Writeln('  TCommDLL: procedures of DLL assigned');
+        fOnInitDLL(Config);
+        SetLength(fDLLConfig.Author, Config.AuthorLen);
+        Move(Config.Author^, fDLLConfig.Author[1], Config.AuthorLen * SizeOf(fDLLConfig.Author[1]));
+        SetLength(fDLLConfig.Description, Config.DescriptionLen);
+        Move(Config.Description^, fDLLConfig.Description[1], Config.DescriptionLen * SizeOf(fDLLConfig.Description[1]));
+        SetLength(fDLLConfig.ExtAIName, Config.ExtAINameLen);
+        Move(Config.ExtAIName^, fDLLConfig.ExtAIName[1], Config.ExtAINameLen * SizeOf(fDLLConfig.ExtAIName[1]));
+        fDLLConfig.Version := Config.Version;
+        Writeln('  TCommDLL: DLL detected, DLL Name: ' + fDLLConfig.ExtAIName + '; Version: ' + IntToStr(fDLLConfig.Version));
       end;
 
       //RegisterCallback1 := GetProcAddress(fLibHandle, 'RegisterCallback1');

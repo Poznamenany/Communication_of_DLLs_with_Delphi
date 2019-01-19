@@ -20,6 +20,9 @@ type
 	f8 = Double;   // 15  significant digits, exponent  -308 to +308
 	//f10 = Extended; // 19  significant digits, exponent -4932 to +4932
 
+  // String
+  wStr = WideString;
+
   // Pointers
   pb = ^b;
   pui8 = ^ui8;
@@ -29,6 +32,8 @@ type
   pui32 = ^ui32;
   psi32 = ^si32;
 
+  pwStr = PWideChar;
+
   // Arrays
   bArr = array of b;
   ui8Arr = array of ui8;
@@ -37,6 +42,24 @@ type
   si16Arr = array of si16;
   ui32Arr = array of ui32;
   si32Arr = array of si32;
+
+  // Structures
+  TDLLConfig = record
+    Author: wStr;
+    Description: wStr;
+    ExtAIName: wStr;
+    Version: ui32;
+  end;
+
+  TDLLpConfig = record
+    Author: pwStr;
+    AuthorLen: ui32;
+    Description: pwStr;
+    DescriptionLen: ui32;
+    ExtAIName: pwStr;
+    ExtAINameLen: ui32;
+    Version: ui32;
+  end;
 
 implementation
 
