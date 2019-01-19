@@ -6,7 +6,7 @@ uses
 
 type
   // API for 1 specific ExtAI class in DLL. Allows ExtAI to communicate during the game.
-  TExtAIAPI = class(TInterfacedObject, IActions)
+  TExtAIAPI = class(TInterfacedObject, IActions, IStates)
   private
     fID: ui8;
     // IInterface
@@ -14,6 +14,7 @@ type
     //procedure BeforeDestruction; override;
     // IActions
     procedure Action1(aID: ui32; aCmd: ui32); StdCall;
+    function State1(aID: ui32): ui8; StdCall;
   public
     Events: IEvents;
     property ID: ui8 read fID;
@@ -60,6 +61,13 @@ end;
 procedure TExtAIAPI.Action1(aID: ui32; aCmd: ui32);
 begin
   writeln('    TExtAIAPI: Action1; class fID: ' + IntToStr(fID) + '; parameter1 aID: ' + IntToStr(aID) + '; parameter2 aCmd: ' + IntToStr(aCmd));
+end;
+
+
+function TExtAIAPI.State1(aID: ui32): ui8;
+begin
+  writeln('    TExtAIAPI: State1; class fID: ' + IntToStr(fID) + '; parameter1 aID: ' + IntToStr(aID));
+  Result := aID*2;
 end;
 
 

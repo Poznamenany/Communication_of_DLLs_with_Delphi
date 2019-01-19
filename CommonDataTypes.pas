@@ -20,6 +20,15 @@ type
 	f8 = Double;   // 15  significant digits, exponent  -308 to +308
 	//f10 = Extended; // 19  significant digits, exponent -4932 to +4932
 
+  // Arrays
+  bArr = array of b;
+  ui8Arr = array of ui8;
+  si8Arr = array of si8;
+  ui16Arr = array of ui16;
+  si16Arr = array of si16;
+  ui32Arr = array of ui32;
+  si32Arr = array of si32;
+
 implementation
 
 end.

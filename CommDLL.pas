@@ -6,7 +6,7 @@ uses
 type
   TInitDLL = procedure(); StdCall;
   TTerminDLL = procedure(); StdCall;
-  TInitNewExtAI = procedure(aID: ui8; aActions: IActions) StdCall;
+  TInitNewExtAI = procedure(aID: ui8; aActions: IActions; aStates: IStates) StdCall;
   TNewExtAI = function(): IEvents; SafeCall; // Same like StdCall but allows exceptions
 
   TCallback1 = function(sig: ui8): b of object; StdCall;
@@ -117,7 +117,7 @@ begin
     ExtAIAPI := TExtAIAPI.Create(aExtAIID);
     try
       ExtAIAPI.Events := fOnNewExtAI(); // = add reference to ExtAIAPI
-      fOnInitNewExtAI( aExtAIID, ExtAIAPI );
+      fOnInitNewExtAI( aExtAIID, ExtAIAPI, ExtAIAPI );
     except
       on E: Exception do
       begin
