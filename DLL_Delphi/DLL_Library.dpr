@@ -8,14 +8,32 @@ uses
 type
   TCallback1 = function(sig: ui8): b of object; StdCall;
 
+const
+  CONFIG: TDLLConfig = (
+    Author: 'Jesus of Nazareth';
+    Description: 'Test example for DLL with External AI (Delphi DLL)';
+    ExtAIName: 'TestingExtAI Delphi';
+    Version: 20190119
+  );
+
 var
   gExtAI: TList;
   Callback1: TCallback1;
 
-procedure InitDLL(); StdCall;
+procedure InitDLL(var aConfig: TDLLpConfig); StdCall;
 begin
   writeln('  DLL: InitDLL - Delphi');
   gExtAI := TList.Create();
+  with aConfig do
+  begin
+    Author := Addr(CONFIG.Author[1]);
+    AuthorLen := Length(CONFIG.Author);
+    Description := Addr(CONFIG.Description[1]);
+    DescriptionLen := Length(CONFIG.Description);
+    ExtAIName := Addr(CONFIG.ExtAIName[1]);
+    ExtAINameLen := Length(CONFIG.ExtAIName);
+    Version := CONFIG.Version;
+  end;
 end;
 
 procedure TerminDLL(); StdCall;
