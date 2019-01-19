@@ -12,3 +12,16 @@ using si64 = int64_t;  //        -(2^63) to (2^63)-1
 using f4 = float;
 using f8 = double;
 // using f12 = long double;	
+
+// Pointers
+typedef b * pb;
+typedef ui8 * pui8;
+typedef si8 * psi8;
+typedef ui16 * pui16;
+typedef si16 * psi16;
+typedef ui32 * pui32;
+typedef si32 * psi32;
+typedef ui64 * pui64;
+typedef si64 * psi64;
+typedef f4 * pf4;
+typedef f8 * pf8;

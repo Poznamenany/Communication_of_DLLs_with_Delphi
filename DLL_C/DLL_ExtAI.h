@@ -45,6 +45,22 @@ void TExtAI::Event1(ui32 aID)
 	Actions->Action1(11, 22); // Check callback in Delphi
 	ui8 testVar = States->State1(22); // Check callback in Delphi
 	printf("    TExtAI: Event1, class ID %d; testVar: %d\n",ID,testVar);
+	// Get array (pointer to first element) from Main program and copy memory so we can work with it
+	pui32 pMap;
+	si32 mapLen;
+	if (States->State2(pMap,mapLen) == true)
+	{
+		pui32 Map = new ui32[mapLen];
+		memcpy(Map, pMap, mapLen * sizeof(Map[0])); 
+		printf("    TExtAI: Event1, class ID %d; log array:",ID);
+		for (ui32 K = 0; K < mapLen; K++)
+		{
+			printf(" %d",Map[K]);
+		}
+		printf("\n");
+		// ...
+		delete [] Map;
+	}
 }
 
 
