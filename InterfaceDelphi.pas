@@ -21,6 +21,7 @@ type
   IStates = interface(IInterface)
     ['{2A228001-8FE0-4A01-8B5D-5D7D8394B1DD}']
     function State1(aID: ui32): ui8; StdCall;
+    function State2(var aFirstElem: pui32; var aLength: si32): b; StdCall;
   end;
 
 

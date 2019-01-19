@@ -20,6 +20,15 @@ type
 	f8 = Double;   // 15  significant digits, exponent  -308 to +308
 	//f10 = Extended; // 19  significant digits, exponent -4932 to +4932
 
+  // Pointers
+  pb = ^b;
+  pui8 = ^ui8;
+  psi8 = ^si8;
+  pui16 = ^ui16;
+  psi16 = ^si16;
+  pui32 = ^ui32;
+  psi32 = ^si32;
+
   // Arrays
   bArr = array of b;
   ui8Arr = array of ui8;

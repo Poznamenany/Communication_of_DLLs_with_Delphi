@@ -65,8 +65,8 @@ end;
 
 
 function TCommDLL.LinkDLL(aDLLPath: String): b;
-var
-  RegisterCallback1: procedure(x: TCallback1); StdCall;
+//var
+//  RegisterCallback1: procedure(x: TCallback1); StdCall;
 begin
   Result := False;
   fDLLPath := aDLLPath;

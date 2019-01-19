@@ -9,12 +9,14 @@ type
   TExtAIAPI = class(TInterfacedObject, IActions, IStates)
   private
     fID: ui8;
+    fMap: ui32Arr;
     // IInterface
     //procedure AfterConstruction; override;
     //procedure BeforeDestruction; override;
     // IActions
     procedure Action1(aID: ui32; aCmd: ui32); StdCall;
     function State1(aID: ui32): ui8; StdCall;
+    function State2(var aFirstElem: pui32; var aLength: si32): b; StdCall;
   public
     Events: IEvents;
     property ID: ui8 read fID;
@@ -68,6 +70,24 @@ function TExtAIAPI.State1(aID: ui32): ui8;
 begin
   writeln('    TExtAIAPI: State1; class fID: ' + IntToStr(fID) + '; parameter1 aID: ' + IntToStr(aID));
   Result := aID*2;
+end;
+
+function TExtAIAPI.State2(var aFirstElem: pui32; var aLength: si32): b; StdCall;
+var
+  K: Integer;
+begin
+  write('    TExtAIAPI: State2; class fID: ' + IntToStr(fID) + '; create array:');
+  // Declare / refresh local array fMap
+  SetLength(fMap,5);
+  for K := Low(fMap) to High(fMap) do
+  begin
+    fMap[K] := K;
+    write(' ' + IntToStr(fMap[K]));
+  end;
+  writeln('');
+  aFirstElem := @fMap[0];
+  aLength := Length(fMap);
+  Result := True;
 end;
 
 
