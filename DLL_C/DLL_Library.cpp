@@ -29,6 +29,7 @@ void ADDCALL TerminDLL(void)
 		if (ExtAI[K] != NULL)
 		{
 			ExtAI[K]->Actions->Release(); // Release TExtAI via actions (it will start the release chain -> it will command to release also TExtAI)
+			ExtAI[K]->States->Release();
 			//ExtAI[K]->Release(); // This is not required (memory is already empty)
 			ExtAI[K] = NULL;
 		}
@@ -54,12 +55,14 @@ HRESULT ADDCALL NewExtAI(pIEvents *aEvents)
 }
 
 
-void ADDCALL InitNewExtAI(ui8 aID, pIActions aActions)
+void ADDCALL InitNewExtAI(ui8 aID, pIActions aActions, pIStates aStates)
 {
 	printf("  DLL: InitNewExtAI - C\n");
 	ExtAI[ExtAICnt-1]->ID = aID;
 	ExtAI[ExtAICnt-1]->Actions = aActions;
 	ExtAI[ExtAICnt-1]->Actions->AddRef(); // Mark reference
+	ExtAI[ExtAICnt-1]->States = aStates;
+	ExtAI[ExtAICnt-1]->States->AddRef(); // Mark reference
 }
 
 

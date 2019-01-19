@@ -9,6 +9,7 @@ class TExtAI: public IEvents
 	public:
 		ui8 ID;
 		pIActions Actions;
+		pIStates States;
 		TExtAI(void);
 		~TExtAI(void);
 		// IEvents
@@ -27,6 +28,7 @@ TExtAI::TExtAI(void)
 	ID = 0;
 	m_cRef = 0;
 	Actions = NULL;
+	States = NULL;
 	printf("    ExtAI: Constructor\n");
 }
 
@@ -41,6 +43,8 @@ void TExtAI::Event1(ui32 aID)
 {
 	printf("    TExtAI: Event1, class ID: %d; parameter aID: %d\n",ID,aID);
 	Actions->Action1(11, 22); // Check callback in Delphi
+	ui8 testVar = States->State1(22); // Check callback in Delphi
+	printf("    TExtAI: Event1, class ID %d; testVar: %d\n",ID,testVar);
 }
 
 

@@ -41,7 +41,7 @@ static const GUID IID_IStates =
 interface IStates: IUnknown
 {
 public:
-    virtual void ADDCALL State1(ui32 aID, ui32 aCmd) = 0;
+    virtual ui8 ADDCALL State1(ui32 aID) = 0;
 };
 typedef IStates * pIStates;
 
@@ -53,7 +53,7 @@ extern "C" {
 // Communication interface
 void ADDCALL InitDLL(void);
 void ADDCALL TerminDLL(void);
-void ADDCALL InitNewExtAI(ui8 aID, pIActions aActions);
+void ADDCALL InitNewExtAI(ui8 aID, pIActions aActions, pIStates aStates);
 HRESULT ADDCALL NewExtAI(pIEvents *aEvents);
 
 // Callback for communication interface
