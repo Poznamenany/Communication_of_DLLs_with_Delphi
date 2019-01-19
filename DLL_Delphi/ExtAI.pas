@@ -14,6 +14,7 @@ TExtAI = class(TInterfacedObject, IEvents)
     procedure Event1(aID: ui32); StdCall;
   public
     Actions: IActions;
+    States: IStates;
     ID: ui8;
 
     constructor Create();
@@ -55,9 +56,13 @@ end;
 
 // Test all callbacks and events
 procedure TExtAI.Event1(aID: ui32);
+var
+  testVar: ui8;
 begin
   writeln('    TExtAI: Event1, class fID: ' + IntToStr(ID) + '; parameter aID: ' + IntToStr(aID)); // Show event 1
   Actions.Action1(11,22); // Check callback
+  testVar := States.State1(22);
+  writeln('    TExtAI: Event1, class fID: ' + IntToStr(ID) + '; testVar: ' + IntToStr(testVar)); // Show test var from State 1
 end;
 
 

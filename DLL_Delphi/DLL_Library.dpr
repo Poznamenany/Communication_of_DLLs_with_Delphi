@@ -1,7 +1,5 @@
 library DLL_Library;
-
 {$DEFINE DLL_Library}
-
 uses
   SysUtils, Classes, ExtAI, InterfaceDelphi, CommonDataTypes;
 
@@ -29,6 +27,7 @@ begin
     if (gExtAI[K] <> nil) then
     begin
       TExtAI(gExtAI[K]).Actions := nil; // = decrement Interface Actions
+      TExtAI(gExtAI[K]).States := nil; // = decrement Interface States
       gExtAI[K] := nil; // = decrement Interface Events
     end;
   gExtAI.Free();
@@ -44,11 +43,15 @@ begin
   Result := ExtAI; // Return pointer to this class (ExtAI is derived from event interface)
 end;
 
-procedure InitNewExtAI(aID: ui8; aActions: IActions); StdCall;
+procedure InitNewExtAI(aID: ui8; aActions: IActions; aStates: IStates); StdCall;
 begin
   writeln('  DLL: InitNewExtAI - Delphi');
-  TExtAI(gExtAI[gExtAI.Count-1]).ID := aID;
-  TExtAI(gExtAI[gExtAI.Count-1]).Actions := aActions; // = increment Interface Actions
+  with TExtAI(gExtAI[gExtAI.Count-1]) do
+  begin
+    ID := aID;
+    Actions := aActions; // = increment Interface Actions
+    States := aStates; // = increment Interface States
+  end;
 end;
 
 
