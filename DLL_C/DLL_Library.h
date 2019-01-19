@@ -52,7 +52,7 @@ extern "C" {
 #endif
 
 // Communication interface
-void ADDCALL InitDLL(void);
+void ADDCALL InitDLL(TDLLpConfig *aConfig);
 void ADDCALL TerminDLL(void);
 void ADDCALL InitNewExtAI(ui8 aID, pIActions aActions, pIStates aStates);
 HRESULT ADDCALL NewExtAI(pIEvents *aEvents);

@@ -1,9 +1,16 @@
 #include <stdio.h>
-#include "DLL_Library.h"
 #include "DLL_ExtAI.h"
 
 // Constants
 const ui8 MAX_EXT_AI_CNT = 12;
+
+const TDLLConfig CONFIG =
+{
+	L"Jesus of Nazareth", // Author
+	L"Test example for DLL with External AI (C DLL)", // Description
+	L"TestingExtAI C", // Name of the ExtAI
+	20190119 // Version
+};
 
 // Variables
 ui8 ExtAICnt; // ExtAI cnt
@@ -11,7 +18,7 @@ pTExtAI ExtAI [MAX_EXT_AI_CNT]; // pointers to possible ExtAI
 pCallback1 Callback1;// Callback from communication interface in C to Delphi
 
 // Events
-void ADDCALL InitDLL(void)
+void ADDCALL InitDLL(TDLLpConfig *aConfig)
 {
 	printf("  DLL: InitDLL - C\n");
 	ExtAICnt = 0;
@@ -19,6 +26,13 @@ void ADDCALL InitDLL(void)
 	{
 		ExtAI[K] = NULL;
 	}
+	aConfig->Author = CONFIG.Author;
+	aConfig->AuthorLen = wcslen(CONFIG.Author);
+	aConfig->Description = CONFIG.Description;
+	aConfig->DescriptionLen = wcslen(CONFIG.Description);
+	aConfig->ExtAIName = CONFIG.ExtAIName;
+	aConfig->ExtAINameLen = wcslen(CONFIG.ExtAIName);
+	aConfig->Version = CONFIG.Version;
 }
 
 void ADDCALL TerminDLL(void) 

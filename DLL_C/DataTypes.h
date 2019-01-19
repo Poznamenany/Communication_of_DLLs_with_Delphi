@@ -13,6 +13,9 @@ using f4 = float;
 using f8 = double;
 // using f12 = long double;	
 
+// String
+using wStr = wchar_t;
+
 // Pointers
 typedef b * pb;
 typedef ui8 * pui8;
@@ -25,3 +28,22 @@ typedef ui64 * pui64;
 typedef si64 * psi64;
 typedef f4 * pf4;
 typedef f8 * pf8;
+
+// Structures
+struct TDLLConfig {
+	wStr const* Author;
+	wStr const* Description;
+	wStr const* ExtAIName;
+	ui32 Version;
+};
+
+struct TDLLpConfig
+{
+	wStr const* Author;
+	ui32 AuthorLen;
+	wStr const* Description;
+	ui32 DescriptionLen;
+	wStr const* ExtAIName;
+	ui32 ExtAINameLen;
+	ui32 Version;
+};

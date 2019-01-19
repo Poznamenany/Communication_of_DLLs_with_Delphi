@@ -1,6 +1,6 @@
 LIBRARY "DLL_library.dll"
 EXPORTS
-    InitDLL=InitDLL@0
+    InitDLL=InitDLL@4
     InitNewExtAI=InitNewExtAI@12
     NewExtAI=NewExtAI@4
     RegisterCallback1=RegisterCallback1@4
