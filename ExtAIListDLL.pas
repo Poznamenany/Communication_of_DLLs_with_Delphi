@@ -21,15 +21,13 @@ type
   //@Martin: Let's rename it to match its role - to TExtDLLList, (same for unit name - ExtDLLList.pas)
   // (I know, LLL looks bad to read, but at least it reflects the meaning of the class. Suggest your alternative?)
   //@Krom: TExtAIListDLL ... ExtAI to secure connection with ExtAI and swap DLL behind list to improve readability
+  //@Martin: What do you mean?
   TExtAIListDLL = class
   private
     fDLLs: TStringList;
     function GetDLL(aIndex: Integer): string;
     function GetCount: Integer;
   public
-    //@Martin: Why do we wrap TStringList inside the TCheckDLL? To keep the public interface as simple AS POSSIBLE.
-    // We could have done it TCheckDLL = class(TStringList), but then users of this class would have access to other public methods we would not want them to use
-    //@Krom: Fair point
     property Count: Integer read GetCount;
     property DLL[aIndex: Integer]: string read GetDll; default;
 

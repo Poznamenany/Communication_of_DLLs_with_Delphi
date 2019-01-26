@@ -15,6 +15,7 @@ type
     property AvailableDLLs: TExtAIListDLL read fCheckDLL;
     //Note for the future, the game doesn't care about DLLs. It needs a list of ExtAIs it can use
     //@Krom: 1 DLL = 1 ExtAI
+    //@Martin: Why is that? It should be "1 DLL = 1 ExtAI class" and "1 DLL = any number of ExtAI instances"
     //TODO: Create DLL config structure (with name of ExtAI) and send it to the game instead of DLLs path
 
     constructor Create();
