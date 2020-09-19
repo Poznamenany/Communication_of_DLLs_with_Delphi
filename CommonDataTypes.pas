@@ -2,6 +2,8 @@ unit CommonDataTypes;
 interface
 
 type
+  //@Martin: For simplicity sake, let's reduce number of data-types used in exchange with DLL to required minimum - Boolean, Integer, Single (and String)
+
   b = boolean;     //                        0 to 1
   // Integer
 	ui8 = Byte;      //                        0 to 255
